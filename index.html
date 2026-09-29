@@ -66,7 +66,7 @@
     display: inline-block; padding: 8px 20px;
     background: linear-gradient(135deg, var(--pink-medium), var(--lavender));
     border-radius: 20px; color: white;
-    font-size: 0.9rem; letter-spacing: 1px;
+    font-size: 0.95rem; letter-spacing: 1px; font-weight: 500;
   }
   .controls {
     display: flex; gap: 15px; justify-content: center;
@@ -91,15 +91,6 @@
   }
   .btn-primary:disabled {
     opacity: 0.6; cursor: not-allowed; transform: none;
-  }
-  .btn-secondary {
-    background: rgba(255, 255, 255, 0.6);
-    color: var(--text-dark);
-    border: 1px solid rgba(212, 165, 181, 0.3);
-  }
-  .btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.9);
-    transform: translateY(-2px);
   }
   #fileInput { display: none; }
   .gallery {
@@ -160,10 +151,6 @@
   .photo-caption p[contenteditable="true"]:empty::before {
     content: 'Напиши что-нибудь нежное...';
     color: #c8b8c0;
-  }
-  .photo-date {
-    font-size: 0.75rem; color: var(--text-light);
-    margin-top: 6px; letter-spacing: 1px;
   }
   .empty-state {
     text-align: center; padding: 80px 20px;
@@ -254,7 +241,7 @@
   <header>
     <h1>Для моей любимой 💗</h1>
     <p class="subtitle">Каждое фото — это наша маленькая история</p>
-    <div class="date-display" id="currentDate"></div>
+    <div class="date-display">Навсегда вместе 💕</div>
   </header>
 
   <div class="controls">
@@ -298,16 +285,16 @@
 
 <script>
   // ============================================
-  // 🔑 ВСТАВЬ СЮДА СВОИ КЛЮЧИ ИЗ FIREBASE
+  // 🔑 Твои ключи Firebase
   // ============================================
   const firebaseConfig = {
-  apiKey: "AIzaSyBo_z8csO2RsEeXOG-bnNSSOPJzxOw8-2E",
-  authDomain: "dashylka-d39a7.firebaseapp.com",
-  databaseURL: "https://dashylka-d39a7-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "dashylka-d39a7",
-  storageBucket: "dashylka-d39a7.firebasestorage.app",
-  messagingSenderId: "348265562354",
-  appId: "1:348265562354:web:b9f89e5b9dbf533617906b"
+    apiKey: "AIzaSyBo_z8csO2RsEeXOG-bnNSSOPJzxOw8-2E",
+    authDomain: "dashylka-d39a7.firebaseapp.com",
+    databaseURL: "https://dashylka-d39a7-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "dashylka-d39a7",
+    storageBucket: "dashylka-d39a7.firebasestorage.app",
+    messagingSenderId: "348265562354",
+    appId: "1:348265562354:web:b9f89e5b9dbf533617906b"
   };
   // ============================================
 
@@ -323,10 +310,7 @@
   const modalImg = document.getElementById('modalImg');
   const uploadBtn = document.getElementById('uploadBtn');
 
-  // Дата
-document.getElementById('currentDate').textContent = 'С любовью ♥';
-
-  // Сердечки
+  // Сердечки на фоне
   (function createHearts() {
     const bg = document.getElementById('heartsBg');
     const hearts = ['💗','💕','💖','🌸','✿','❀'];
@@ -342,7 +326,7 @@ document.getElementById('currentDate').textContent = 'С любовью ♥';
     }
   })();
 
-  // Сжатие изображения
+  // Сжатие изображения для быстрой загрузки
   function compressImage(dataUrl, callback) {
     const img = new Image();
     img.onload = () => {
@@ -361,7 +345,7 @@ document.getElementById('currentDate').textContent = 'С любовью ♥';
     img.src = dataUrl;
   }
 
-  // Загрузка фото
+  // Загрузка фото в общую базу
   fileInput.addEventListener('change', (e) => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
@@ -378,7 +362,6 @@ document.getElementById('currentDate').textContent = 'С любовью ♥';
           newRef.set({
             src: compressed,
             caption: '',
-            date: new Date().toLocaleDateString('ru-RU'),
             timestamp: Date.now()
           }).then(() => {
             loaded++;
@@ -395,7 +378,7 @@ document.getElementById('currentDate').textContent = 'С любовью ♥';
     fileInput.value = '';
   });
 
-  // Слушаем изменения в базе (общая галерея!)
+  // Слушаем изменения в базе в реальном времени (общая галерея!)
   photosRef.on('value', (snapshot) => {
     loading.style.display = 'none';
     const data = snapshot.val() || {};
@@ -427,6 +410,7 @@ document.getElementById('currentDate').textContent = 'С любовью ♥';
       gallery.appendChild(card);
     });
 
+    // Сохранение подписей в базу при редактировании
     document.querySelectorAll('.photo-caption p').forEach(p => {
       p.addEventListener('blur', () => {
         const id = p.dataset.id;
