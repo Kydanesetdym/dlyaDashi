@@ -254,6 +254,7 @@
   <header>
     <h1>Для моей любимой 💗</h1>
     <p class="subtitle">Каждое фото — это наша маленькая история</p>
+    <div class="date-display" id="currentDate"></div>
   </header>
 
   <div class="controls">
@@ -323,10 +324,7 @@
   const uploadBtn = document.getElementById('uploadBtn');
 
   // Дата
-  const months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
-  const now = new Date();
-  document.getElementById('currentDate').textContent =
-    `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+document.getElementById('currentDate').textContent = 'С любовью ♥';
 
   // Сердечки
   (function createHearts() {
@@ -424,7 +422,6 @@
         </div>
         <div class="photo-caption">
           <p contenteditable="true" data-id="${photo.id}">${photo.caption || ''}</p>
-          <div class="photo-date">${photo.date || ''}</div>
         </div>
       `;
       gallery.appendChild(card);
